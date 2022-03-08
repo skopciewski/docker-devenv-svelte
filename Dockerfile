@@ -18,9 +18,9 @@ RUN mkdir -p /home/${user}/opt \
 
 # configure npm
 
-RUN mkdir -p /home/${user}/node \
-  && npm config set prefix /home/${user}/node \
-  && echo "export PATH=/home/${user}/node/bin:$PATH" > /home/${user}/.zshrc_local_conf/npm_env.zshrc \
+RUN mkdir -p /home/${user}/.local \
+  && npm config set prefix /home/${user}/.local \
+  && echo "export PATH=/home/${user}/.local/bin:$PATH" > /home/${user}/.zshrc_local_conf/npm_env.zshrc \
   && npm install eslint --global
 
 ENV ZSH_TMUX_AUTOSTART=true \
