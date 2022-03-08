@@ -9,7 +9,7 @@ RUN apk add --no-cache \
 ARG user=dev
 USER ${user}
 
-ENV DEVDOTFILES_VIM_SVELTE_VER=1.0.0
+ENV DEVDOTFILES_VIM_SVELTE_VER=1.0.1
 RUN mkdir -p /home/${user}/opt \
   && cd /home/${user}/opt \
   && curl -fsSL https://github.com/skopciewski/dotfiles_vim_svelte/archive/${DEVDOTFILES_VIM_SVELTE_VER}.tar.gz | tar xz \
