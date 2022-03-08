@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+set -eo pipefail
+[[ "$TRACE" ]] && set -x
+
+DOCKER_IMAGE=skopciewski/devenv-svelte
+DEVDIR=/mnt/devdir
+XSOCK=/tmp/.X11-unix
+DBUSCOCK=/run/user/$(id -u)/bus
+DIR=$PWD
+
+run_devenv() {
+  local params=""
+  params+=" -it --rm"
+  params+=" --hostname=devenv"
+  params+=" --net=host"
+  params+=" -e TZ=$(timedatectl show --va -p Timezone)"
+  params+=" -e DISPLAY"
+  params+=" -e SSH_AUTH_SOCK"
+  params+=" -e DBUS_SESSION_BUS_ADDRESS"
+  params+=" -v $(dirname $SSH_AUTH_SOCK):$(dirname $SSH_AUTH_SOCK)"
+  params+=" -v ${XSOCK}:${XSOCK}"
+  params+=" -v ${DBUSCOCK}:${DBUSCOCK}"
+  params+=" -v ${DIR}:${DEVDIR}"
+  docker run ${params} ${DOCKER_IMAGE}
+}
+
+main() {
+  run_devenv
+}
+
+[[ "$0" == "$BASH_SOURCE" ]] && main "$@"
