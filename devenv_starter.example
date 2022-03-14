@@ -8,6 +8,21 @@ XSOCK=/tmp/.X11-unix
 DBUSCOCK=/run/user/$(id -u)/bus
 DIR=$PWD
 
+calculate_share() {
+  local s_dir="${DIR}/_share_"
+  if [[ -L "${s_dir}" ]]; then
+    local s_dest="$(dirname $(readlink -f ${s_dir}))"
+    echo " -v ${s_dest}:${s_dest}"
+  fi
+}
+
+check_tmuxp() {
+  local t_file="${DIR}/.tmuxp.yaml"
+  if [[ -e "${t_file}" ]]; then
+    echo ' -e ZSH_TMUXP_AUTOSTART=.'
+  fi
+}
+
 run_devenv() {
   local params=""
   params+=" -it --rm"
@@ -17,10 +32,12 @@ run_devenv() {
   params+=" -e DISPLAY"
   params+=" -e SSH_AUTH_SOCK"
   params+=" -e DBUS_SESSION_BUS_ADDRESS"
+  params+="$(check_tmuxp)"
   params+=" -v $(dirname $SSH_AUTH_SOCK):$(dirname $SSH_AUTH_SOCK)"
   params+=" -v ${XSOCK}:${XSOCK}"
   params+=" -v ${DBUSCOCK}:${DBUSCOCK}"
   params+=" -v ${DIR}:${DEVDIR}"
+  params+="$(calculate_share)"
   docker run ${params} ${DOCKER_IMAGE}
 }
 
