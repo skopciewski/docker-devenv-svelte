@@ -15,6 +15,12 @@ RUN mkdir -p "${HOST_NODE_MODULES}" \
   && echo "export PATH=${HOST_NODE_MODULES}/bin:\$PATH" > /home/${user}/.zshrc_local_conf/npm_env.zshrc
   # && npm install --global eslint-plugin-json
 
+# template configs
+RUN mkdir -p /home/${user}/templates
+COPY --chown=${user}:${user} data/eslintrc.cjs /home/${user}/templates/
+COPY --chown=${user}:${user} data/package.json /home/${user}/templates/
+COPY --chown=${user}:${user} data/prettierrc /home/${user}/templates/
+
 # configure vim
 COPY --chown=${user}:${user} data/vim_plugins.txt /home/${user}/
 COPY --chown=${user}:${user} data/plugin/ /home/${user}/.vim/plugin/
